@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>WhyMeOverFlow</title>
     <link href="../static/css/bootstrap.css" rel="stylesheet">
+    <style>
+        html {
+            overflow-y: scroll;
+        }
+    </style>
 </head>
 
 <body>
@@ -26,7 +31,7 @@
                     <button type="button" class="btn btn-success">Ask!</button>
                 </div>
             </div>
-            <div class="d-flex gap-2 align-items-center">
+            <div class="d-flex gap-2 align-items-center" style="width: 300px;">
                 <div>
                     <img src="avatar.jpg" class="img-thumbnail rounded-circle" alt="...">
                 </div>
@@ -38,7 +43,7 @@
                     </div>
                 </div>
             </div>
-            <div class="d-flex gap-2 d-none"> <!--Блок неавторизованного пользователя-->
+            <div class="d-flex gap-2 d-none" style="width: 300px;"> <!--Блок неавторизованного пользователя-->
                 <button type="button" class="btn btn-outline-primary">Log in</button>
                 <button type="button" class="btn btn-primary">Sign up</button>
             </div>
@@ -56,11 +61,13 @@
                             </div>
                             <div class="d-flex flex-column align-items-center">
                                 <div class="mb-1 d-flex align-items-center justify-content-start w-100">
-                                    <button type="button" class="btn btn-sm btn-outline-primary flex-grow-1 text-center">Like</button>
+                                    <button type="button"
+                                        class="btn btn-sm btn-outline-primary flex-grow-1 text-center">Like</button>
                                     <div class="likes-count ms-3">(5)</div>
                                 </div>
                                 <div class="d-flex align-items-center justify-content-start w-100">
-                                    <button type="button" class="btn btn-sm btn-outline-danger flex-grow-1 text-center">Dislike</button> 
+                                    <button type="button"
+                                        class="btn btn-sm btn-outline-danger flex-grow-1 text-center">Dislike</button>
                                     <div class="dislikes-count ms-3">(2)</div>
                                 </div>
                             </div>
@@ -94,11 +101,13 @@
                                         </div>
                                         <div class="d-flex flex-column align-items-center">
                                             <div class="mb-1 d-flex align-items-center justify-content-start w-100">
-                                                <button type="button" class="btn btn-sm btn-outline-primary flex-grow-1 text-center">Like</button>
+                                                <button type="button"
+                                                    class="btn btn-sm btn-outline-primary flex-grow-1 text-center">Like</button>
                                                 <div class="likes-count ms-3">(5)</div>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-start w-100">
-                                                <button type="button" class="btn btn-sm btn-outline-danger flex-grow-1 text-center">Dislike</button> 
+                                                <button type="button"
+                                                    class="btn btn-sm btn-outline-danger flex-grow-1 text-center">Dislike</button>
                                                 <div class="dislikes-count ms-3">(2)</div>
                                             </div>
                                         </div>
@@ -106,18 +115,21 @@
                                     <div class="col d-flex flex-column justify-content-between">
                                         <div>
                                             <h5 class="card-title">Special title treatment</h5>
-                                            <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                                Placeat eum laudantium atque, quasi quaerat asperiores eius iste nulla sit
+                                            <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing
+                                                elit.
+                                                Placeat eum laudantium atque, quasi quaerat asperiores eius iste nulla
+                                                sit
                                                 perspiciatis hic, nemo, eos optio expedita dicta laborum assumenda
                                                 laboriosam exercitationem.
                                             </p>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="flexCheckChecked" checked>
                                             <label class="form-check-label" for="flexCheckChecked">
-                                              Correct!
+                                                Correct!
                                             </label>
-                                          </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -132,11 +144,13 @@
                                         </div>
                                         <div class="d-flex flex-column align-items-center">
                                             <div class="mb-1 d-flex align-items-center justify-content-start w-100">
-                                                <button type="button" class="btn btn-sm btn-outline-primary flex-grow-1 text-center">Like</button>
+                                                <button type="button"
+                                                    class="btn btn-sm btn-outline-primary flex-grow-1 text-center">Like</button>
                                                 <div class="likes-count ms-3">(5)</div>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-start w-100">
-                                                <button type="button" class="btn btn-sm btn-outline-danger flex-grow-1 text-center">Dislike</button> 
+                                                <button type="button"
+                                                    class="btn btn-sm btn-outline-danger flex-grow-1 text-center">Dislike</button>
                                                 <div class="dislikes-count ms-3">(2)</div>
                                             </div>
                                         </div>
@@ -144,18 +158,21 @@
                                     <div class="col d-flex flex-column justify-content-between">
                                         <div>
                                             <h5 class="card-title">Special title treatment</h5>
-                                            <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                                Placeat eum laudantium atque, quasi quaerat asperiores eius iste nulla sit
+                                            <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing
+                                                elit.
+                                                Placeat eum laudantium atque, quasi quaerat asperiores eius iste nulla
+                                                sit
                                                 perspiciatis hic, nemo, eos optio expedita dicta laborum assumenda
                                                 laboriosam exercitationem.
                                             </p>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="flexCheckChecked">
                                             <label class="form-check-label" for="flexCheckChecked">
-                                              Correct!
+                                                Correct!
                                             </label>
-                                          </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -163,26 +180,27 @@
                     </div>
                     <nav aria-label="Page navigation example" class="d-flex flex-column align-items-center">
                         <ul class="pagination">
-                          <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Previous">
-                              <span aria-hidden="true">&laquo;</span>
-                            </a>
-                          </li>
-                          <li class="page-item"><a class="page-link" href="#">1</a></li>
-                          <li class="page-item"><a class="page-link" href="#">2</a></li>
-                          <li class="page-item"><a class="page-link" href="#">3</a></li>
-                          <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Next">
-                              <span aria-hidden="true">&raquo;</span>
-                            </a>
-                          </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
                         </ul>
-                      </nav>
+                    </nav>
                 </article>
-                
+
                 <footer class="mt-4">
                     <div>
-                        <textarea class="form-control" id="answerText" rows="3" placeholder="Enter your answer here.."></textarea>
+                        <textarea class="form-control" id="answerText" rows="3"
+                            placeholder="Enter your answer here.."></textarea>
                     </div>
                     <button type="button" class="btn btn-primary mt-3 mb-3">Answer</button>
                 </footer>

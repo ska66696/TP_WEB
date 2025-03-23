@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>WhyMeOverFlow</title>
     <link href="../static/css/bootstrap.css" rel="stylesheet">
+    <style>
+        html {
+            overflow-y: scroll;
+        }
+    </style>
 </head>
 
 <body>
@@ -26,7 +31,7 @@
                     <button type="button" class="btn btn-success">Ask!</button>
                 </div>
             </div>
-            <div class="d-flex gap-2 align-items-center">
+            <div class="d-flex gap-2 align-items-center" style="width: 300px;">
                 <div>
                     <img src="avatar.jpg" class="img-thumbnail rounded-circle" alt="...">
                 </div>
@@ -38,7 +43,7 @@
                     </div>
                 </div>
             </div>
-            <div class="d-flex gap-2 d-none"> <!--Блок неавторизованного пользователя-->
+            <div class="d-flex gap-2 d-none" style="width: 300px;"> <!--Блок неавторизованного пользователя-->
                 <button type="button" class="btn btn-outline-primary">Log in</button>
                 <button type="button" class="btn btn-primary">Sign up</button>
             </div>
