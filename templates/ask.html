@@ -1,0 +1,33 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block content %} 
+<section>
+    <h1>New Question</h1>
+    <form>
+        <div class="mb-3">
+            <label for="questionTitle" class="col-sm-2 col-form-label col-form-label-lg">Title</label>
+            <input type="text" class="form-control is-invalid" id="questionTitle" placeholder="Title"
+                maxlength="200">
+            <div class="invalid-feedback">Title is required and should be less than 200 characters.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="questionText" class="col-sm-2 col-form-label col-form-label-lg">Text</label>
+            <textarea class="form-control" id="questionText" rows="5" placeholder="Text"></textarea>
+
+        </div>
+        <div class="mb-3">
+            <label for="questionTags" class="col-sm-2 col-form-label col-form-label-lg">Tags</label>
+            <input type="text" class="form-control is-invalid" id="questionTags"
+                placeholder="Go, Python, Java" maxlength="100">
+            <div class="form-text">Enter tags separated by commas. No more than 3 tags.</div>
+            <div class="invalid-feedback">Please enter up to 3 tags and separate them by commas. No more
+                than 3 tags allowed.</div>
+        </div>
+        <div class="mt-3">
+            <button type="submit" class="btn btn-success">Ask!</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

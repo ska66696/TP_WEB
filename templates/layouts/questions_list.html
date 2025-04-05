@@ -1,0 +1,48 @@
+{% load static %}
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-2 d-flex flex-column align-items-center">
+                <div style="width: 100px; height: 100px;" class="border mb-2">
+                    <img src="#" alt="img" class="img-fluid">
+                </div>
+                <div class="d-flex flex-column align-items-center">
+                    <div class="mb-1 d-flex align-items-center justify-content-start w-100">
+                        <button type="button"
+                            class="btn btn-sm btn-outline-primary flex-grow-1 text-center">Like</button>
+                        <div class="likes-count ms-3">(5)</div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-start w-100">
+                        <button type="button"
+                            class="btn btn-sm btn-outline-danger flex-grow-1 text-center">Dislike</button>
+                        <div class="dislikes-count ms-3">(2)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col d-flex flex-column justify-content-between">
+                <div>
+                    <h5 class="card-title">
+                        <a href = "{% url "question" question.id%}">{{question.title}}</a>
+                    </h5>
+                    <p class="card-text">
+                        {{question.text}}
+                    </p>
+                </div>
+                <div class="row mt-3">
+                    <div class="col">
+                        <p><a class="link-offset-3" href="{% url "question" question.id%}">Answers(3)</a></p>
+                    </div>
+                    <div class="col">
+                                        <span>Tags:</span>
+                        {% for tag in question.tags %}
+                        <a href="{% url 'tag' tag_name=tag %}" class="badge bg-light text-dark border text-decoration-none fs-8">
+                            {{ tag }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

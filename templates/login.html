@@ -1,0 +1,28 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block content %} 
+<section>
+    <h1>Log In</h1>
+    <form>
+        <div class="mb-3">
+            <label for="login" class="form-label">Login</label>
+            <input type="text" class="form-control is-invalid" id="login"
+                placeholder="Enter your login">
+            <div class="invalid-feedback">Login is required.</div>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control is-invalid" id="password" placeholder="********">
+            <div class="invalid-feedback">Wrong password. Please try again.</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Log in</button>
+
+        <div class="mt-3">
+            <a href="#" class="btn btn-outline-primary btn-sm">Create new account</a>
+        </div>
+    </form>
+</section>
+{% endblock %}
