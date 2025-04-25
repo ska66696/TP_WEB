@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.urls import reverse
 
-# Create your models here.
 
 class QuestionManager(models.Manager):
     def new(self):
@@ -44,6 +43,8 @@ class Profile(models.Model):
         null=True,
         default='static/img/default_avatar.png'
     )
+
+    nickname = models.CharField(max_length=50, blank=True, null=True)
 
 
 class Tag(models.Model):

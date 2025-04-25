@@ -1,0 +1,69 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block content %}
+<section>
+    <h1>Edit Profile</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" action="{% url 'profile_edit' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="mb-3">
+            <label for="{{ form.email.id_for_label }}" class="form-label">{{ form.email.label }}</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in form.email.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.nickname.id_for_label }}" class="form-label">{{ form.nickname.label }}</label>
+            {{ form.nickname }}
+            {% if form.nickname.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in form.nickname.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.avatar.id_for_label }}" class="form-label">{{ form.avatar.label }}</label>
+            {% if form.initial.avatar and form.initial.avatar.url %}
+            {{ form.avatar }}
+             <div class="mb-2">
+                Current: <a href="{{ form.initial.avatar.url }}">{{ form.initial.avatar.name }}</a>
+             </div>
+            {% endif %}
+            {% if form.avatar.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in form.avatar.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</section>
+{% endblock %}

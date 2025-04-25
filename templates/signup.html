@@ -4,43 +4,96 @@
 {% block content %} 
 <section>
     <h1>Registration</h1>
-    <form>
+    <form method="POST" action="{% url 'signup' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
         <div class="mb-3">
-            <label for="login" class="form-label">Login</label>
-            <input type="text" class="form-control is-invalid" id="login" placeholder="dr_pepper"
-                maxlength="50">
-            <div class="form-text">Login can contain letters, numbers and underscores.</div>
-            <div class="invalid-feedback">Login is required and must be alphanumeric.</div>
+            <label for="{{ form.username.id_for_label }}" class="form-label">{{ form.username.label }}</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in form.username.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% else %}
+                 <div class="form-text">Login can contain letters, numbers and underscores.</div>
+            {% endif %}
         </div>
+
         <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control is-invalid" id="email"
-                placeholder="drpepper@mail.ru" maxlength="100">
-            <div class="invalid-feedback">This email address allready registered.</div>
+            <label for="{{ form.email.id_for_label }}" class="form-label">{{ form.email.label }}</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in form.email.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
+
         <div class="mb-3">
-            <label for="nickName" class="form-label">NickName</label>
-            <input type="text" class="form-control is-invalid" id="nickName" placeholder="Dr. Pepper"
-                maxlength="50">
-            <div class="invalid-feedback">Nickname is required.</div>
+            <label for="{{ form.nickname.id_for_label }}" class="form-label">{{ form.nickname.label }}</label>
+            {{ form.nickname }}
+            {% if form.nickname.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in form.nickname.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
+
         <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control is-invalid" id="password" placeholder="********"
-                maxlength="100">
-            <div class="invalid-feedback">Password must be at least 8 characters long.</div>
+            <label for="{{ form.password.id_for_label }}" class="form-label">{{ form.password.label }}</label>
+            {{ form.password }}
+             {% if form.password.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in form.password.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+             {% else %}
+                 <div class="form-text">Password must be at least 8 characters long.</div>
+            {% endif %}
         </div>
+
         <div class="mb-3">
-            <label for="repeatPassword" class="form-label">Repeat password</label>
-            <input type="password" class="form-control is-invalid" id="repeatPassword"
-                placeholder="********" maxlength="100">
-            <div class="invalid-feedback">Passwords do not match.</div>
+            <label for="{{ form.password_confirm.id_for_label }}" class="form-label">{{ form.password_confirm.label }}</label>
+            {{ form.password_confirm }}
+             {% if form.password_confirm.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in form.password_confirm.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
-        <div class="mb-3">
-            <label for="avatar" class="form-label">Upload avatar</label>
-            <input class="form-control is-invalid" type="file" id="avatar">
-            <div class="invalid-feedback">Invalid file format. Please upload a JPG or PNG image.</div>
+
+         <div class="mb-3">
+            <label for="{{ form.avatar.id_for_label }}" class="form-label">{{ form.avatar.label }}</label>
+            {{ form.avatar }}
+            {% if form.avatar.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in form.avatar.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+             {% else %}
+                 <div class="form-text">Upload a JPG or PNG image.</div>
+            {% endif %}
         </div>
+
+
         <button type="submit" class="btn btn-primary">Register</button>
     </form>
 </section>
