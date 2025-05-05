@@ -128,7 +128,7 @@ def ask(request):
 
             tag_names = form.cleaned_data.get('tags', [])
             for tag_name in tag_names:
-                tag = Tag.objects.get_or_create(name=tag_name)
+                tag, _ = Tag.objects.get_or_create(name=tag_name)
                 new_question.tags.add(tag)
 
             return redirect(reverse('question', kwargs={'question_id': new_question.id}))
