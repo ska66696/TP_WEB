@@ -38,14 +38,17 @@ class Profile(models.Model):
         )
     
     avatar = models.ImageField(
-        upload_to='static/img/%Y/%m/%d/',
+        upload_to='avatars/%Y/%m/%d/',
         blank=True,
         null=True,
-        default='static/img/default_avatar.png'
     )
 
     nickname = models.CharField(max_length=50, blank=True, null=True)
 
+    def get_avatar_url(self):
+        if self.avatar and hasattr(self.avatar, 'url'):
+            return self.avatar.url
+        return "/static/img/default_avatar.png" 
 
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
