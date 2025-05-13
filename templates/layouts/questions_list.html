@@ -9,8 +9,19 @@
                 </div>
                 <div class="d-flex flex-column align-items-center w-100">
                     <div class="mb-1 d-flex align-items-center justify-content-center w-100">
-                        <button type="button"
-                            class="btn btn-sm btn-outline-primary text-center w-50">Like: {{ question.likes_count }}</button>
+                        {% if user.is_authenticated %}
+                            <button type="button"
+                                    class="btn btn-sm text-center w-75 js-like-button 
+                                           {% if question.user_has_liked %}btn-primary{% else %}btn-outline-primary{% endif %}"
+                                    data-question-id="{{ question.id }}">
+                                <span class="js-like-count">{{ question.likes_count }}</span> Likes
+                            </button>
+                        {% else %}
+                            <a href="{% url 'login' %}?continue={{ request.get_full_path|urlencode }}"
+                               class="btn btn-sm btn-outline-primary text-center w-75">
+                                <span class="js-like-count">{{ question.likes_count }}</span> Likes
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -40,3 +51,4 @@
         </div>
     </div>
 </div>
+

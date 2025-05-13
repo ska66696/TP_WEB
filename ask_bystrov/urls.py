@@ -30,7 +30,10 @@ urlpatterns = [
     path('question/<int:question_id>/', views.question, name = 'question'),
     path('tag/<str:tag_name>/', views.tag, name = 'tag'),
     path('logout/', views.logout, name='logout'),
-    path('profile/edit/', views.profile_edit, name='profile_edit')
+    path('profile/edit/', views.profile_edit, name='profile_edit'),
+    path('question/<int:question_id>/like/', views.like_question, name='like_question'),
+    path('answer/<int:answer_id>/like/', views.like_answer, name='like_answer'),
+    path('mark_correct_answer/', views.mark_correct_answer, name='mark_correct_answer'),
 ]
 
 if settings.DEBUG:

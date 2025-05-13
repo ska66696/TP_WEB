@@ -10,8 +10,19 @@
                 </div>
                 <div class="d-flex flex-column align-items-center w-100">
                     <div class="mb-1 d-flex align-items-center justify-content-center w-100">
-                        <button type="button"
-                            class="btn btn-sm btn-outline-primary text-center w-50">Like: {{ question.likes_count }}</button>
+                        {% if user.is_authenticated %}
+                            <button type="button"
+                                    class="btn btn-sm text-center w-75 js-like-button 
+                                           {% if question.user_has_liked %}btn-primary{% else %}btn-outline-primary{% endif %}"
+                                    data-question-id="{{ question.id }}">
+                                <span class="js-like-count">{{ question.likes_count }}</span> Likes
+                            </button>
+                        {% else %}
+                            <a href="{% url 'login' %}?continue={{ request.get_full_path|urlencode }}"
+                               class="btn btn-sm btn-outline-primary text-center w-75">
+                                <span class="js-like-count">{{ question.likes_count }}</span> Likes
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -46,8 +57,19 @@
                                 </div>
                                 <div class="d-flex flex-column align-items-center w-100">
                                     <div class="mb-1 d-flex align-items-center justify-content-center w-100">
-                                        <button type="button"
-                                            class="btn btn-sm btn-outline-primary text-center w-50">Like: {{ answer.likes_count }}</button>
+                                        {% if user.is_authenticated %}
+                                            <button type="button"
+                                                    class="btn btn-sm text-center w-75 js-like-answer-button 
+                                                           {% if answer.user_has_liked_answer %}btn-success{% else %}btn-outline-success{% endif %}"
+                                                    data-answer-id="{{ answer.id }}">
+                                                <span class="js-answer-like-count">{{ answer.likes_count }}</span> Likes
+                                            </button>
+                                        {% else %}
+                                            <a href="{% url 'login' %}?continue={{ request.get_full_path|urlencode }}#answer-{{ answer.id }}"
+                                               class="btn btn-sm btn-outline-success text-center w-75">
+                                                <span class="js-answer-like-count">{{ answer.likes_count }}</span> Likes
+                                            </a>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -58,8 +80,15 @@
                                     </p>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value=""
-                                            id="correct_{{ answer.id }}" {% if answer.is_correct %}checked{% endif %}>
+                                    <input class="form-check-input js-correct-answer" 
+                                        type="checkbox"
+                                        id="correct_{{ answer.id }}"
+                                        {% if answer.is_correct %}checked{% endif %}
+                                        {% if not user.is_authenticated or user.profile != question.author %}disabled{% endif %}
+                                        
+                                        data-answer-id="{{ answer.id }}"
+                                        data-question-id="{{ question.id }}"
+                                        >
                                     <label class="form-check-label" for="correct_{{ answer.id }}">
                                         Correct!
                                     </label>
@@ -98,4 +127,8 @@
             <button type="submit" class="btn btn-primary mt-1 mb-3">Answer</button>
        </form>
     </footer>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/likes.js' %}"></script>
 {% endblock %}

@@ -1,14 +1,16 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.db.models import Count
+from django.db.models import Count, Exists, OuterRef
 from django.contrib import auth
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from math import ceil
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 
-from .models import Question, Answer, Tag, Profile
+from .models import Question, Answer, Tag, Profile, QuestionLike, AnswerLike
 from .forms import LoginForm, SignUpForm, ProfileEditForm, AskForm, AnswerForm
     
 def paginate(objects_list, request, per_page=5):
@@ -26,6 +28,12 @@ def paginate(objects_list, request, per_page=5):
 
 def index(request):
     questions_list = Question.objects.new().prefetch_related('author', 'tags').annotate(likes_count=Count('questionlike'))
+    if request.user.is_authenticated:
+        user_likes_subquery = QuestionLike.objects.filter(
+            question=OuterRef('pk'),
+            user=request.user.profile
+        )
+        questions_list = questions_list.annotate(user_has_liked=Exists(user_likes_subquery))
     page = paginate(questions_list, request, per_page=5)
     popular_tags = Tag.objects.get_popular_tags()
 
@@ -39,6 +47,12 @@ def index(request):
 
 def hot(request):
     questions_list = Question.objects.best().prefetch_related('author', 'tags')
+    if request.user.is_authenticated:
+        user_likes_subquery = QuestionLike.objects.filter(
+            question=OuterRef('pk'),
+            user=request.user.profile
+        )
+        questions_list = questions_list.annotate(user_has_liked=Exists(user_likes_subquery))
     page = paginate(questions_list, request, per_page=5)
     popular_tags = Tag.objects.get_popular_tags()
 
@@ -50,11 +64,17 @@ def hot(request):
     return render(request, template_name = 'hot.html', context = context)
 
 def question(request, question_id):
-    question_item = get_object_or_404(
-        Question.objects.prefetch_related('author__user', 'tags')
-        .annotate(likes_count=Count('questionlike')),
-        pk=question_id
-    )
+    question_query = Question.objects.prefetch_related('author__user', 'tags').filter(pk=question_id)
+    
+    question_query = question_query.annotate(likes_count=Count('questionlike'))
+    if request.user.is_authenticated:
+        user_like_subquery = QuestionLike.objects.filter(
+            question_id=OuterRef('pk'), 
+            user=request.user.profile
+        )
+        question_query = question_query.annotate(user_has_liked=Exists(user_like_subquery))
+    
+    question_item = get_object_or_404(question_query, pk=question_id)
     
     if request.method == 'POST':
         if not request.user.is_authenticated:
@@ -84,6 +104,12 @@ def question(request, question_id):
         answer_form = AnswerForm()
 
     answers_list = Answer.objects.best_for_question(question_id)
+    if request.user.is_authenticated:
+        user_answer_likes_subquery = AnswerLike.objects.filter(
+            answer=OuterRef('pk'),
+            user=request.user.profile
+        )
+        answers_list = answers_list.annotate(user_has_liked_answer=Exists(user_answer_likes_subquery))
     page = paginate(answers_list, request, per_page=5)
 
     popular_tags = Tag.objects.get_popular_tags()
@@ -100,7 +126,15 @@ def question(request, question_id):
 
 def tag(request, tag_name):
     tag_obj = get_object_or_404(Tag, name=tag_name)
-    questions_list = Question.objects.by_tag(tag_obj).annotate(likes_count=Count('questionlike'))
+    questions_list = Question.objects.by_tag(tag_obj)
+    questions_list = questions_list.annotate(likes_count=Count('questionlike'))
+    
+    if request.user.is_authenticated:
+        user_likes_subquery = QuestionLike.objects.filter(
+            question=OuterRef('pk'),
+            user=request.user.profile
+        )
+        questions_list = questions_list.annotate(user_has_liked=Exists(user_likes_subquery))
     page = paginate(questions_list, request, per_page=5)
     popular_tags = Tag.objects.get_popular_tags()
 
@@ -239,3 +273,72 @@ def profile_edit(request):
     }
     return render(request, template_name = 'profile_edit.html', context = context)
 
+@login_required
+@require_POST
+def like_question(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+
+    profile = request.user.profile
+
+    like, created = QuestionLike.objects.get_or_create(user=profile, question=question)
+
+    if created:
+        action = 'liked'
+    else:
+        like.delete()
+        action = 'unliked'
+    
+    current_likes_count = QuestionLike.objects.filter(question=question).count()
+
+    return JsonResponse({
+        'status': 'ok',
+        'action': action,
+        'likes_count': current_likes_count
+    })
+
+@login_required
+@require_POST
+def like_answer(request, answer_id):
+    answer = get_object_or_404(Answer, pk=answer_id)
+
+    profile = request.user.profile
+
+    like, created = AnswerLike.objects.get_or_create(user=profile, answer=answer)
+
+    if created:
+        action = 'liked'
+    else:
+        like.delete()
+        action = 'unliked'
+    
+    current_likes_count = AnswerLike.objects.filter(answer=answer).count()
+
+    return JsonResponse({
+        'status': 'ok',
+        'action': action,
+        'likes_count': current_likes_count
+    })
+
+@login_required
+@require_POST
+def mark_correct_answer(request):
+
+    question_id = int(request.POST.get('question_id'))
+    answer_id = int(request.POST.get('answer_id'))
+    is_checked_by_user = request.POST.get('is_checked') == 'true'
+
+    question = get_object_or_404(Question, pk=question_id)
+    answer_to_toggle = get_object_or_404(Answer, pk=answer_id, question=question)
+
+    if request.user.profile != question.author:
+        return JsonResponse({'status': 'error', 'message': 'Only the author can mark answers.'}, status=403)
+
+    answer_to_toggle.is_correct = is_checked_by_user
+    answer_to_toggle.save()
+
+    return JsonResponse({
+        'status': 'ok',
+        'message': 'Answer state updated.',
+        'answer_id': answer_to_toggle.id,
+        'is_correct': answer_to_toggle.is_correct
+    })
