@@ -150,6 +150,7 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 media/ # Если вы храните загружаемые файлы локально
+/media/
 staticfiles/ # Собранные статические файлы
 
 # Environments
