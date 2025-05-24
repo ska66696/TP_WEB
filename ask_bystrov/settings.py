@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-^6psx=1!@m)-8ik-0=7ataanue+sv*@++1b+x&okg-%^7()2%&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
@@ -125,7 +125,7 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'static'
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static/",
+    BASE_DIR / "project_static",
 ]
 
 MEDIA_URL = '/media/'
@@ -135,3 +135,18 @@ MEDIA_ROOT = BASE_DIR / 'media/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CENTRIFUGO_HMAC_SECRET = "secret"
+CENTRIFUGO_API_KEY = "secret"
+CENTRIFUGO_URL = "localhost:8010"
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': BASE_DIR / 'django_cache',
+        'TIMEOUT': None,
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000
+        }
+    }
+}

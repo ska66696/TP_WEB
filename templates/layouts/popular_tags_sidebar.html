@@ -1,0 +1,10 @@
+{% if popular_tags_list %}
+    <h3>Popular tags</h3>
+    <div class="d-inline-flex flex-wrap gap-2">
+        {% for tag_item in popular_tags_list %}
+            <a href="{% url 'tag' tag_name=tag_item.name %}" class="badge bg-light text-dark border text-decoration-none fs-8">
+                {{ tag_item.name }}
+            </a>
+        {% endfor %}
+    </div>
+{% endif %}

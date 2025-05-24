@@ -1,0 +1,14 @@
+{% if best_users_list %}
+    <h3>Best members</h3>
+    <div>
+        {% for user_data in best_users_list %}
+            <div class="mb-2 d-flex align-items-center">
+                <img src="{{ user_data.avatar_url }}" alt="{{ user_data.nickname }} avatar" 
+                     class="img-thumbnail rounded-circle me-2" 
+                     style="width: 30px; height: 30px; object-fit: cover;">
+                <span>{{ user_data.nickname }}</span>
+                <span class="ms-auto badge bg-secondary">{{ user_data.score }} pts</span>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}

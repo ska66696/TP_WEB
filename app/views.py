@@ -9,6 +9,10 @@ from django.contrib import messages
 from math import ceil
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
+import jwt
+import time
+from django.conf import settings
+from cent import Client, PublishRequest
 
 from .models import Question, Answer, Tag, Profile, QuestionLike, AnswerLike
 from .forms import LoginForm, SignUpForm, ProfileEditForm, AskForm, AnswerForm
@@ -63,6 +67,36 @@ def hot(request):
         }
     return render(request, template_name = 'hot.html', context = context)
 
+
+def generate_centrifugo_token(user_id_str, expiration_delta_seconds=600):
+    claims = {
+        "sub": user_id_str,
+        "exp": int(time.time()) + expiration_delta_seconds
+    }
+    token = jwt.encode(
+        claims,
+        settings.CENTRIFUGO_HMAC_SECRET,
+        algorithm="HS256"
+    )
+    return token
+
+def publish_to_centrifugo(channel, data):
+    api_url = f"http://{settings.CENTRIFUGO_URL}/api"
+
+    client = Client(
+        api_url,
+        api_key=settings.CENTRIFUGO_API_KEY,
+        timeout=1
+    )
+    
+    request = PublishRequest(channel=channel, data=data)
+    
+    try:
+        client.publish(request)
+        return True
+    except Exception as e:
+        return False
+
 def question(request, question_id):
     question_query = Question.objects.prefetch_related('author__user', 'tags').filter(pk=question_id)
     
@@ -92,6 +126,21 @@ def question(request, question_id):
             )
             new_answer.save()
 
+            answer_data_for_centrifugo = {
+                'id': new_answer.id,
+                'text': new_answer.text,
+                'author_nickname': profile.nickname if profile.nickname else profile.user.username,
+                'author_avatar_url': profile.get_avatar_url(),
+                'created_at': new_answer.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                'question_id': question_item.id,
+                'is_current_user_question_author': request.user.is_authenticated and request.user.profile == question_item.author,
+                'initial_likes_count': 0,
+            }
+            
+            channel_name = f"question_{question_item.id}"
+            
+            publish_to_centrifugo(channel_name, answer_data_for_centrifugo)
+
             all_answers_sorted_ids = list(Answer.objects.best_for_question(question_id).values_list('id', flat=True))
             new_answer_index = all_answers_sorted_ids.index(new_answer.id)
             target_page_num = ceil((new_answer_index + 1) / 5)
@@ -114,12 +163,23 @@ def question(request, question_id):
 
     popular_tags = Tag.objects.get_popular_tags()
 
+    user_identifier_for_token = ""
+    if request.user.is_authenticated:
+        user_identifier_for_token = str(request.user.id)
+
+    cent_token = generate_centrifugo_token(user_identifier_for_token)
+    
+    question_channel_name = f"question_{question_item.id}" 
+
     context = {
         'answers': page.object_list,
         'page_obj': page,
         'question': question_item,
         'popular_tags': popular_tags,
-        'answer_form': answer_form
+        'answer_form': answer_form,
+        'centrifugo_token': cent_token,
+        'ws_url': settings.CENTRIFUGO_URL,
+        'centrifugo_channel_name': question_channel_name,
     }
 
     return render(request, template_name = 'question.html', context = context)
